@@ -132,15 +132,15 @@ def main():
         
         # ---------- 可选：自动 git 提交 ----------
         # 如果你希望脚本自动 push，取消下面代码的注释，并配置好 GIT_REPO_PATH
-        # import subprocess
-        # repo_path = GIT_REPO_PATH
-        # try:
-        #     subprocess.check_call(["git", "-C", repo_path, "add", CACHE_FILE, OUTPUT_FILE])
-        #     subprocess.check_call(["git", "-C", repo_path, "commit", "-m", f"Update IPv6: {current_ip}"])
-        #     subprocess.check_call(["git", "-C", repo_path, "push"])
-        #     print("✅ Git push 完成")
-        # except Exception as e:
-        #     print(f"⚠️ Git 操作失败: {e}")
+        import subprocess
+        repo_path = "git@github.com:vic-qy/DDNS.git"
+        try:
+            subprocess.check_call(["git", "-C", repo_path, "add", CACHE_FILE, OUTPUT_FILE])
+            subprocess.check_call(["git", "-C", repo_path, "commit", "-m", f"Update IPv6: {current_ip}"])
+            subprocess.check_call(["git", "-C", repo_path, "push"])
+            print("✅ Git push 完成")
+        except Exception as e:
+            print(f"⚠️ Git 操作失败: {e}")
         # -----------------------------------------
         
         print(f"✅ 已更新 IPv6 地址文件: {OUTPUT_FILE}")
