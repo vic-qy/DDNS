@@ -3,365 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDNS - Emby 连接助手</title>
+    <title>IPv6 地址</title>
     <style>
-        * { box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #f5f7fa;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             padding: 20px;
         }
-        .card {
-            max-width: 680px;
-            width: 100%;
+        .container {
             background: white;
+            padding: 48px 40px;
             border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-            padding: 40px 32px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
             text-align: center;
+            max-width: 700px;
+            width: 100%;
         }
-        h1 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin: 0 0 8px 0;
-        }
-        .subtitle {
-            color: #6b7280;
+        .label {
             font-size: 14px;
-            margin-top: 0;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 20px;
-        }
-        .ip-box {
-            background: #f0f4ff;
-            border: 1px dashed #3b82f6;
-            border-radius: 16px;
-            padding: 20px 16px;
-            margin: 24px 0;
-            word-break: break-all;
-        }
-        .ip-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #2563eb;
             letter-spacing: 1px;
             text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 12px;
         }
-        .ip-address {
-            font-size: 22px;
+        .ip {
+            font-size: 28px;
             font-weight: 600;
             font-family: "SF Mono", "Consolas", monospace;
             color: #0f172a;
-            margin: 12px 0 4px;
-            line-height: 1.4;
-        }
-        .port-badge {
-            display: inline-block;
-            background: #1e293b;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 4px 14px;
-            border-radius: 30px;
-            letter-spacing: 0.5px;
-        }
-        .full-url {
-            background: #eef2f6;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #334155;
-            font-family: monospace;
-            margin: 12px 0 0;
             word-break: break-all;
+            line-height: 1.5;
+            min-height: 2.4em;
         }
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 24px 0 16px;
-        }
-        .btn {
-            border: none;
-            border-radius: 40px;
-            padding: 12px 28px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: scale(1.02);
-        }
-        .btn-secondary {
-            background: #e5e7eb;
-            color: #1f2937;
-        }
-        .btn-secondary:hover {
-            background: #d1d5db;
-        }
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #059669;
-        }
-        .status {
-            margin: 20px 0 0;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            background: #f8fafc;
-            color: #475569;
-        }
-        .status .highlight {
-            color: #2563eb;
-            font-weight: 600;
+        .loading {
+            color: #9ca3af;
+            font-weight: 400;
+            font-size: 20px;
         }
         .error {
             color: #dc2626;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-        }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 40px;
-            font-weight: 500;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        .toast.show {
-            opacity: 1;
+            font-weight: 400;
+            font-size: 18px;
         }
         .footer {
             margin-top: 24px;
-            font-size: 12px;
+            font-size: 13px;
             color: #9ca3af;
             border-top: 1px solid #e5e7eb;
             padding-top: 20px;
         }
-        @media (max-width: 480px) {
-            .card { padding: 28px 16px; }
-            .ip-address { font-size: 18px; }
-            .btn { width: 100%; justify-content: center; }
+        .footer a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>🌐 Emby 连接助手</h1>
-        <p class="subtitle">当前动态 IPv6 地址（实时获取）</p>
-
-        <div id="ipDisplay" class="ip-box">
-            <div class="ip-label">📍 公网 IPv6 临时地址</div>
-            <div id="ipValue" class="ip-address">正在获取...</div>
-            <div style="margin-top:8px;">
-                <span class="port-badge">端口 8096</span>
-            </div>
-            <div id="fullUrlDisplay" class="full-url" style="display:none;"></div>
-        </div>
-
-        <div class="btn-group">
-            <button id="copyBtn" class="btn btn-success" onclick="copyToClipboard()">
-                📋 复制完整地址 (含端口)
-            </button>
-            <button id="goBtn" class="btn btn-primary" onclick="redirectToEmby()">
-                🚀 立即跳转 Emby
-            </button>
-        </div>
-
-        <div id="statusMsg" class="status">
-            ⏳ 正在检测 IPv6 地址，<span id="countdown">3</span> 秒后自动跳转...
-        </div>
-
-        <div class="footer">
-            💡 对于分开填写「链接+端口」的 App，请复制上方地址填入「链接」栏，端口填 <strong>8096</strong>
-        </div>
+    <div class="container">
+        <div class="label">🌐 当前公网 IPv6 地址</div>
+        <div id="ipDisplay" class="ip loading">正在获取…</div>
+        
     </div>
 
-    <div id="toast" class="toast">✅ 已复制到剪贴板</div>
-
     <script>
-        // ---------- 配置 ----------
         const USER = "vic-qy";
         const REPO = "DDNS";
-        const PORT = 8096;
-        const RAW_URL = `https://v6.gh-proxy.org/https://raw.githubusercontent.com/${USER}/${REPO}/master/ipv6.txt`;
-        // --------------------------
+        const RAW_URL = `https://raw.githubusercontent.com/${USER}/${REPO}/main/ipv6.txt`;
 
-        let currentIp = null;
-        let countdownTimer = null;
-        let redirectTimer = null;
+        const ipDisplay = document.getElementById('ipDisplay');
 
-        // DOM 元素
-        const ipValueEl = document.getElementById('ipValue');
-        const fullUrlDisplay = document.getElementById('fullUrlDisplay');
-        const statusMsg = document.getElementById('statusMsg');
-        const countdownEl = document.getElementById('countdown');
-        const goBtn = document.getElementById('goBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const toast = document.getElementById('toast');
-
-        // 获取 IP
         async function fetchIp() {
             try {
                 const resp = await fetch(RAW_URL);
-                if (!resp.ok) throw new Error('文件不存在或网络错误');
+                if (!resp.ok) throw new Error('文件不存在');
                 const ip = (await resp.text()).trim();
                 if (ip && ip.includes(':')) {
-                    currentIp = ip;
-                    return true;
+                    ipDisplay.textContent = ip;
+                    ipDisplay.className = 'ip';
                 } else {
                     throw new Error('无效的 IPv6 格式');
                 }
             } catch (err) {
-                statusMsg.className = 'status error';
-                statusMsg.innerHTML = `❌ 获取失败：${err.message}，请确认仓库中 <strong>ipv6.txt</strong> 存在且内容正确。`;
-                ipValueEl.textContent = '获取失败';
-                return false;
+                ipDisplay.textContent = '⚠️ 获取失败，请稍后重试';
+                ipDisplay.className = 'ip error';
             }
         }
 
-        // 更新界面
-        function updateUI(ip) {
-            const fullUrl = `http://[${ip}]:${PORT}`;
-            ipValueEl.textContent = ip;
-            fullUrlDisplay.textContent = `完整地址：${fullUrl}`;
-            fullUrlDisplay.style.display = 'block';
-            statusMsg.className = 'status';
-            statusMsg.innerHTML = `✅ 获取成功！<span class="highlight">${ip}</span> 端口 ${PORT}`;
-            // 启用按钮
-            goBtn.disabled = false;
-            copyBtn.disabled = false;
-            // 开始倒计时跳转
-            startCountdown();
-        }
-
-        // 倒计时自动跳转
-        function startCountdown() {
-            let seconds = 3;
-            countdownEl.textContent = seconds;
-            if (countdownTimer) clearInterval(countdownTimer);
-            if (redirectTimer) clearTimeout(redirectTimer);
-
-            countdownTimer = setInterval(() => {
-                seconds -= 1;
-                countdownEl.textContent = seconds;
-                if (seconds <= 0) {
-                    clearInterval(countdownTimer);
-                    countdownEl.textContent = '0';
-                    // 执行跳转
-                    redirectToEmby();
-                }
-            }, 1000);
-
-            // 保险：最多等 5 秒强制跳转
-            redirectTimer = setTimeout(() => {
-                clearInterval(countdownTimer);
-                redirectToEmby();
-            }, 5000);
-        }
-
-        // 跳转函数
-        function redirectToEmby() {
-            if (!currentIp) {
-                alert('尚未获取到 IP，请稍候');
-                return;
-            }
-            const url = `http://[${currentIp}]:${PORT}`;
-            window.location.href = url;
-        }
-
-        // 复制函数（复制完整带端口的地址）
-        function copyToClipboard() {
-            if (!currentIp) {
-                alert('尚未获取到 IP');
-                return;
-            }
-            const fullUrl = `http://[${currentIp}]:${PORT}`;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(fullUrl).then(() => {
-                    showToast('✅ 已复制完整地址');
-                }).catch(() => {
-                    fallbackCopy(fullUrl);
-                });
-            } else {
-                fallbackCopy(fullUrl);
-            }
-        }
-
-        // 降级复制方案
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showToast('✅ 已复制完整地址');
-            } catch (e) {
-                alert('复制失败，请手动复制：' + text);
-            }
-            document.body.removeChild(textarea);
-        }
-
-        // 显示 Toast
-        function showToast(msg) {
-            toast.textContent = msg;
-            toast.classList.add('show');
-            clearTimeout(toast._hideTimer);
-            toast._hideTimer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
-        }
-
-        // 初始化
-        async function init() {
-            // 禁用按钮
-            goBtn.disabled = true;
-            copyBtn.disabled = true;
-
-            const success = await fetchIp();
-            if (success) {
-                updateUI(currentIp);
-            } else {
-                // 失败时尝试重试一次（可能是 GitHub raw 限流或网络波动）
-                setTimeout(async () => {
-                    const retry = await fetchIp();
-                    if (retry) {
-                        updateUI(currentIp);
-                    }
-                }, 3000);
-            }
-        }
-
-        // 页面加载执行
-        init();
+        fetchIp();
     </script>
 
 </body>
