@@ -75,12 +75,13 @@
     <div class="container">
         <div class="label">🌐 当前公网 IPv6 地址</div>
         <div id="ipDisplay" class="ip loading">正在获取…</div>
-        
+        <!-- 可选：添加一个简单的说明，但不必须 -->
     </div>
 
     <script>
         const USER = "vic-qy";
         const REPO = "DDNS";
+        // 使用同源路径（GitHub Pages 内），无 CORS 问题
         const RAW_URL = `https://vic-qy.github.io/DDNS/ipv6.txt`;
 
         const ipDisplay = document.getElementById('ipDisplay');
@@ -91,7 +92,8 @@
                 if (!resp.ok) throw new Error('文件不存在');
                 const ip = (await resp.text()).trim();
                 if (ip && ip.includes(':')) {
-                    ipDisplay.textContent = ip;
+                    // 显示带方括号的地址，方便复制
+                    ipDisplay.textContent = `[${ip}]`;
                     ipDisplay.className = 'ip';
                 } else {
                     throw new Error('无效的 IPv6 格式');
